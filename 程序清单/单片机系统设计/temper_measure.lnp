@@ -1,0 +1,13 @@
+"STARTUP.obj",
+"12864.obj",
+"delay.obj",
+"main.obj",
+"key.obj",
+"dht11.obj",
+"showtemperature.obj",
+"ired.obj",
+"uart.obj",
+"wifi_control.obj",
+"IIc.obj" 
+TO "temper_measure" 
+RAMSIZE(256) 

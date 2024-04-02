@@ -1,0 +1,58 @@
+C51 COMPILER V9.59.0.0   DELAY                                                             03/03/2023 11:17:13 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE DELAY
+OBJECT MODULE PLACED IN delay.OBJ
+COMPILER INVOKED BY: D:\keil5\C51\BIN\C51.EXE delay.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          #include <intrins.h>
+   3          
+   4          
+   5          
+   6          /*******************************************************************************
+   7          * 函 数 名       : delay_ms
+   8          * 函数功能     : ms延时函数，ms=1时，大约延时1ms
+   9          * 输    入       : ms：ms延时时间
+  10          * 输    出       : 无
+  11          *******************************************************************************/
+  12          void delay_ms(uint ms)
+  13          {
+  14   1          uint i,j;
+  15   1          for(i=ms; i>0; i--)
+  16   1              for(j=110; j>0; j--);
+  17   1      }
+  18          void delay(int ms)
+  19          {
+  20   1          while(ms--)
+  21   1          {
+  22   2              uchar i;
+  23   2              for(i=0; i<250; i++)
+  24   2              {
+  25   3                  _nop_();
+  26   3                  _nop_();
+  27   3                  _nop_();
+  28   3                  _nop_();
+  29   3              }
+  30   2          }
+  31   1      }
+  32          void delay_us(uchar n)
+  33          {
+  34   1          while(--n);
+  35   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     66    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

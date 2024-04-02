@@ -1,0 +1,224 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              03/03/2023 11:17:13 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\keil5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          
+   3          #include <intrins.h>
+   4          #include "delay.h"
+   5          #include "12864.h"
+   6          #include "dht11.h"
+   7          #include "key.h"
+   8          #include "showtemperature.h"
+   9          #include "ired.h"
+  10          #include "wifi_control.h"
+  11          #include "IIc.h"
+  12          #define LED_KEY_VALUE   0X45
+  13          #define BEEP_KEY_VALUE    0X46
+  14          uchar key;
+  15          uint flag;//标志位
+  16          sbit wind=P2^2;
+  17          uchar ired_buf[3];
+  18          uchar key_cnt_led=0;
+  19          uchar key_cnt_beep=0;
+  20          uchar ired_tempx=0;
+  21          uchar ired_tempy=0;
+  22          void send_data() {
+  23   1          ESP8266_SendData("POST /devices/1051580320/datapoints?type=3 HTTP/1.1");
+  24   1          ESP8266_SendData("\r\n");
+  25   1          ESP8266_SendData("API-KEY:1ZXQyfKnqL1bqEV0D0JJqbL7pmc=");
+  26   1          ESP8266_SendData("\r\n");
+  27   1          ESP8266_SendData("Host:api.heclouds.com");
+  28   1          ESP8266_SendData("\r\n");
+  29   1          ESP8266_SendData("Content-Length:24");
+  30   1          ESP8266_SendData("\r\n");
+  31   1          ESP8266_SendData("");
+  32   1          ESP8266_SendData("\r\n");
+  33   1          ESP8266_SendData("{\"temp\":");
+  34   1          ESP8266_SendData(wendu);
+  35   1          ESP8266_SendData(",\"humi\":");
+  36   1          ESP8266_SendData(shidu);
+  37   1          ESP8266_SendData("}");
+  38   1          ESP8266_SendData("\r\n");
+  39   1          ESP8266_SendData("");
+  40   1          delay_ms(20);
+  41   1      }
+  42          //void time0_init(void)
+  43          //{
+  44          //    TMOD |= 0X01;//选择为定时器0模式，工作方式1
+  45          //    TH0 = 0XFC; //给定时器赋初值，定时1ms
+  46          //    TL0 = 0X18;
+  47          //    ET0 = 1;//打开定时器0中断允许
+  48          //    EA = 1;//打开总中断
+  49          //    TR0 = 1;//打开定时器
+  50          //}
+  51          //void time1_init(void)
+  52          //{
+  53          //    TMOD = 0X10;//选择为定时器1模式，工作方式1
+  54          //    TH1 = 0XFC; //给定时器赋初值，定时1ms
+  55          //    TL1 = 0X18;
+C51 COMPILER V9.59.0.0   MAIN                                                              03/03/2023 11:17:13 PAGE 2   
+
+  56          //    ET1 = 1;//打开定时器0中断允许
+  57          //    EA = 1;//打开总中断
+  58          //    TR1 = 1;//打开定时器
+  59          //}
+  60          void time1_init(void)
+  61          {
+  62   1          TMOD = 0X01;//选择为定时器1模式，工作方式1
+  63   1          TH0 = 0XFC; //给定时器赋初值，定时1ms
+  64   1          TL0 = 0X18;
+  65   1          ET0 = 1;//打开定时器0中断允许
+  66   1          EA = 1;//打开总中断
+  67   1          TR0 = 1;//打开定时器
+  68   1      }
+  69          
+  70          
+  71          void main()
+  72          {
+  73   1          time1_init();
+  74   1          lcd_init();
+  75   1      //    ired_init();//红外初始化
+  76   1          lcd_showstring(0, 0, "2020213373");
+  77   1          lcd_showstring(0, 1, "季宏鑫");
+  78   1           c02_init();
+  79   1          read_time();
+  80   1          while(1) {
+  81   2              key=Keypress();
+  82   2              settem();
+  83   2              if (flag==13) {
+  84   3                  lcd_init();
+  85   3                  save_time();
+  86   3                    while(flag==13) {
+  87   4                  showtem();
+  88   4                  key=Keypress();
+  89   4                  delay_ms(100);
+  90   4                  DHT11_temget();
+  91   4      //            detect();
+  92   4          ttop=(temtop[0]-'0')*10+(temtop[1]-'0');
+  93   4          tlow=(temlow[0]-'0')*10+(temlow[1]-'0');
+  94   4          htop=(humtop[0]-'0')*10+(humtop[1]-'0');
+  95   4          hlow=(humlow[0]-'0')*10+(humlow[1]-'0');
+  96   4          tnow=(wendu[0]-'0')*10+(wendu[1]-'0');
+  97   4          hnow=(shidu[0]-'0')*10+(shidu[1]-'0');
+  98   4          if(tnow>=ttop||tnow<=tlow) {
+  99   5              wind=0;
+ 100   5          }
+ 101   4          else if(tnow<ttop&&tnow>=tlow&&hnow<htop&&hnow>=hlow) {
+ 102   5              wind=1;
+ 103   5          }
+ 104   4          if(hnow>=htop||hnow<=hlow) {
+ 105   5              wind=0;
+ 106   5          }
+ 107   4          else if(tnow<ttop&&tnow>=tlow&&hnow<htop&&hnow>=hlow) {
+ 108   5              wind=1;
+ 109   5          }
+ 110   4                  ESP8266_SendData("{\"temp\":");
+ 111   4          ESP8266_SendData(wendu);
+ 112   4          ESP8266_SendData(",\"humi\":");
+ 113   4          ESP8266_SendData(shidu);
+ 114   4          ESP8266_SendData("}");
+ 115   4          ESP8266_SendData("\r\n");
+ 116   4                  if(flag!=13)break;
+ 117   4              }
+C51 COMPILER V9.59.0.0   MAIN                                                              03/03/2023 11:17:13 PAGE 3   
+
+ 118   3              }
+ 119   2      
+ 120   2              if(flag==14) {
+ 121   3                  wifi_control_init();
+ 122   3                  while (flag==14) {
+ 123   4                      key=Keypress();
+ 124   4                      send_data();
+ 125   4                      DHT11_temget();
+ 126   4                      showtem();
+ 127   4          if(tnow>=ttop||tnow<=tlow) {
+ 128   5              wind=0;
+ 129   5          }
+ 130   4          else if(tnow<ttop&&tnow>=tlow&&hnow<htop&&hnow>=hlow) {
+ 131   5              wind=1;
+ 132   5          }
+ 133   4          if(hnow>=htop||hnow<=hlow) {
+ 134   5              wind=0;
+ 135   5          }
+ 136   4          else if(tnow<ttop&&tnow>=tlow&&hnow<htop&&hnow>=hlow) {
+ 137   5              wind=1;
+ 138   5          }
+ 139   4                      delay_ms(20);
+ 140   4      
+ 141   4                      if(flag!=14)break;
+ 142   4                  }
+ 143   3              }
+ 144   2      //        if(flag==15) {
+ 145   2      //            ired_init();//红外初始化
+ 146   2      //            while(flag==15) {
+ 147   2      //              key=Keypress();
+ 148   2      //          showtem();
+ 149   2      //           detect();
+ 150   2      //                ired_tempx=gired_data[2];//保存键值
+ 151   2      //                if(ired_tempx==LED_KEY_VALUE)//如果是第一键按下
+ 152   2      //                {
+ 153   2      //                    gired_data[2]=0;//清零,等待下次按键按下
+ 154   2      //                    key_cnt_led++;
+ 155   2      //                    if(key_cnt_led==3)key_cnt_led=1;
+ 156   2      //                }
+ 157   2      //                while(key_cnt_led==1) {
+ 158   2      //                    wind=0;
+ 159   2      //                    ired_tempx=gired_data[2];//保存键值
+ 160   2      
+ 161   2      //                    if(ired_tempx==LED_KEY_VALUE)//如果是第一键按下
+ 162   2      //                    {
+ 163   2      //                        gired_data[2]=0;//清零,等待下次按键按下
+ 164   2      //                        key_cnt_led++;
+ 165   2      //                        if(key_cnt_led==3)break;
+ 166   2      //                    }
+ 167   2      //                }
+ 168   2      //            }
+ 169   2      //             if(flag!=15)break;
+ 170   2      //        }
+ 171   2      
+ 172   2          }
+ 173   1      
+ 174   1      
+ 175   1      }
+ 176          
+ 177          
+ 178          
+ 179          void time0() interrupt 1  //T0中断号为
+C51 COMPILER V9.59.0.0   MAIN                                                              03/03/2023 11:17:13 PAGE 4   
+
+ 180          {
+ 181   1          static unsigned int count = 0;
+ 182   1          TH0 = 0XFC; //给定时器赋初值，定时1ms
+ 183   1          TL0 = 0X18;
+ 184   1          count++;
+ 185   1          if (count == 3000) {
+ 186   2              lcd_showstring(0, 0, "温度上限：");
+ 187   2              lcd_showstring(0, 1, "温度下限：");
+ 188   2              lcd_showstring(0, 2, "湿度上限：");
+ 189   2              lcd_showstring(0, 3, "湿度下限：");
+ 190   2              ET0 = 0;
+ 191   2          }
+ 192   1      
+ 193   1      
+ 194   1      
+ 195   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    986    ----
+   CONSTANT SIZE    =    215    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     12    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

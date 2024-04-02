@@ -1,0 +1,17 @@
+#ifndef __12864_H__
+#define __12864_H__
+extern uchar k;
+
+bit lcd_busy();
+void lcd_wcmd(uchar cmd);
+void lcd_wdat(uchar dat);
+void lcd_init();
+void lcd_pos(uchar X,uchar Y);
+void lcd_showstring(uchar x,uchar y,uchar *str);
+uchar read_dat(void);
+void gui_line(uchar x0 , uchar y0 , uchar x1 , uchar y1);
+void gui_rline(uchar x, uchar y0, uchar y1);
+void gui_hline(uchar x0, uchar x1, uchar y);
+void lcd_set_dot(uchar x,uchar y);
+void gui_clear();
+#endif

@@ -1,0 +1,56 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: μVision V5.25.3.0
+Copyright (C) 2018 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: qqaz 1234, 1234, LIC=JLB1Q-NQC0R-29PGB-2QYUZ-LZ2PE-60WHS
+ 
+Tool Versions:
+Toolchain:       PK51 Prof. Developers Kit  Version: 9.59.0.0
+Toolchain Path:  D:\keil5\C51\BIN
+C Compiler:      C51.exe V9.59.0.0
+Assembler:       A51.exe V8.2.7.0
+Linker/Locator:  BL51.exe V6.22.2.0
+Library Manager: LIB51.exe V4.30.1.0
+Hex Converter:   OH51.exe V2.7.0.0
+CPU DLL:         S8051.DLL V3.122.0.0
+Dialog DLL:      DP51.DLL V2.66.0.0 
+<h2>Project:</h2>
+B:\Desktop\新建文件夹 (2)\单片机系统设计\temper measure.uvproj
+Project File Date:  03/02/2023
+
+<h2>Output:</h2>
+Rebuild target 'Target 1'
+assembling STARTUP.A51...
+compiling 12864.c...
+compiling delay.c...
+compiling main.c...
+compiling key.c...
+compiling dht11.c...
+compiling showtemperature.c...
+compiling ired.c...
+compiling uart.c...
+compiling wifi_control.c...
+compiling IIc.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DETECT?SHOWTEMPERATURE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IRED_INIT?IRED
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_UART_SENDSTRING?UART
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_ESP8266_SENDCMD?WIFI_CONTROL
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?LCD_BUSY?12864
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIME0?MAIN
+Program Size: data=117.2 xdata=0 code=4054
+creating hex file from "temper_measure"...
+"temper_measure" - 0 Error(s), 5 Warning(s).
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>

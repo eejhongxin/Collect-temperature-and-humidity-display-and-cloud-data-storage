@@ -1,0 +1,10 @@
+<view class="userinfo">
+ <image class="img"src="../iamge/温度计.png"></image>
+ <text class="userinfo">温度{{temp}}℃</text>
+</view>>
+<view class="userinfo">
+ <image class="img"src="../iamge/湿度.png"></image>
+ <text class="userinfo">湿度{{humi}}％</text>
+</view>>
+
+

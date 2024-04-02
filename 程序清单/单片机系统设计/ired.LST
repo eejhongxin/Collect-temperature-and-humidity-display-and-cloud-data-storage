@@ -1,0 +1,104 @@
+C51 COMPILER V9.59.0.0   IRED                                                              03/03/2023 11:17:13 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE IRED
+OBJECT MODULE PLACED IN ired.OBJ
+COMPILER INVOKED BY: D:\keil5\C51\BIN\C51.EXE ired.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include "ired.h"
+   2          #include  "delay.h"
+   3          uchar gired_data[4];//存储4个字节接收码（地址码+地址反码+控制码+控制反码）
+   4          void delay_10us(uint ten_us)
+   5          {
+   6   1          while(ten_us--);
+   7   1      }
+   8          /*******************************************************************************
+   9          * 函 数 名         : ired_init
+  10          * 函数功能       : 红外端口初始化函数，外部中断0配置
+  11          * 输    入         : 无
+  12          * 输    出         : 无
+  13          *******************************************************************************/
+  14          void ired_init(void)
+  15          {
+  16   1          IT0=1;  //下降沿触发
+  17   1          EX0=1;  //打开中断0允许
+  18   1          EA=1; //打开总中断
+  19   1          IRED=1; //初始化端口
+  20   1      }
+  21          
+  22          void ired() interrupt 0 //外部中断0服务函数
+  23          {
+  24   1          uchar ired_high_time=0;
+  25   1          uint time_cnt=0;
+  26   1          uchar i=0,j=0;
+  27   1      
+  28   1          if(IRED==0)
+  29   1          {
+  30   2              time_cnt=1000;
+  31   2              while((!IRED)&&(time_cnt))//等待引导信号9ms低电平结束，若超过10ms强制退出
+  32   2              {
+  33   3                  delay_10us(1);//延时约10us
+  34   3                  time_cnt--;
+  35   3                  if(time_cnt==0)return;
+  36   3              }
+  37   2              if(IRED)//引导信号9ms低电平已过，进入4.5ms高电平
+  38   2              {
+  39   3                  time_cnt=500;
+  40   3                  while(IRED&&time_cnt)//等待引导信号4.5ms高电平结束，若超过5ms强制退出
+  41   3                  {
+  42   4                      delay_10us(1);
+  43   4                      time_cnt--;
+  44   4                      if(time_cnt==0)return;
+  45   4                  }
+  46   3                  for(i=0; i<4; i++) //循环4次，读取4个字节数据
+  47   3                  {
+  48   4                      for(j=0; j<8; j++) //循环8次读取每位数据即一个字节
+  49   4                      {
+  50   5                          time_cnt=600;
+  51   5                          while((IRED==0)&&time_cnt)//等待数据1或0前面的0.56ms结束，若超过6ms强制退出
+  52   5                          {
+  53   6                              delay_10us(1);
+  54   6                              time_cnt--;
+  55   6                              if(time_cnt==0)return;
+C51 COMPILER V9.59.0.0   IRED                                                              03/03/2023 11:17:13 PAGE 2   
+
+  56   6                          }
+  57   5                          time_cnt=20;
+  58   5                          while(IRED)//等待数据1或0后面的高电平结束，若超过2ms强制退出
+  59   5                          {
+  60   6                              delay_10us(10);//约0.1ms
+  61   6                              ired_high_time++;
+  62   6                              if(ired_high_time>20)return;
+  63   6                          }
+  64   5                          gired_data[i]>>=1;//先读取的为低位，然后是高位
+  65   5                          if(ired_high_time>=8)//如果高电平时间大于0.8ms，数据则为1，否则为0
+  66   5                              gired_data[i]|=0x80;
+  67   5                          ired_high_time=0;//重新清零，等待下一次计算时间
+  68   5                      }
+  69   4                  }
+  70   3              }
+  71   2              if(gired_data[2]!=~gired_data[3])//校验控制码与反码，错误则返回
+  72   2              {
+  73   3                  for(i=0; i<4; i++)
+  74   3                      gired_data[i]=0;
+  75   3                  return;
+  76   3              }
+  77   2          }
+  78   1      }
+  79          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    284    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

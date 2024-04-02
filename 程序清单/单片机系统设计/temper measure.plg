@@ -1,0 +1,56 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+D:\单片机系统设计\temper measure.uvproj
+Project File Date:  01/21/2023
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling 12864.c...
+linking...
+BL51 BANKED LINKER/LOCATER V6.22 - SN: Eval Version
+COPYRIGHT KEIL ELEKTRONIK GmbH 1987 - 2009
+*** ERROR: COMMAND-FILE 'temper' NOT FOUND
+Target not created
+Build target 'Target 1'
+linking...
+BL51 BANKED LINKER/LOCATER V6.22 - SN: Eval Version
+COPYRIGHT KEIL ELEKTRONIK GmbH 1987 - 2009
+*** ERROR: COMMAND-FILE 'temper' NOT FOUND
+Target not created
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling 12864.c...
+linking...
+BL51 BANKED LINKER/LOCATER V6.22 - SN: Eval Version
+COPYRIGHT KEIL ELEKTRONIK GmbH 1987 - 2009
+*** ERROR: COMMAND-FILE 'temper' NOT FOUND
+Target not created
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY0?12864
+Program Size: data=16.1 xdata=0 code=374
+creating hex file from "temper_measure"...
+"temper_measure" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling 12864.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY0?12864
+Program Size: data=16.1 xdata=0 code=374
+creating hex file from "temper_measure"...
+"temper_measure" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling 12864.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY0?12864
+Program Size: data=16.1 xdata=0 code=366
+creating hex file from "temper_measure"...
+"temper_measure" - 0 Error(s), 1 Warning(s).

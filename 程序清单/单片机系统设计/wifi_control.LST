@@ -1,0 +1,87 @@
+C51 COMPILER V9.59.0.0   WIFI_CONTROL                                                      03/03/2023 11:17:13 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE WIFI_CONTROL
+OBJECT MODULE PLACED IN wifi_control.OBJ
+COMPILER INVOKED BY: D:\keil5\C51\BIN\C51.EXE wifi_control.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include "wifi_control.h"
+   2          #include "uart.h"
+   3          #include "delay.h"
+   4          
+   5          //ESP8266 WIFI发送AT指令
+   6          //pbuf：AT指令，字符串格式，如："AT"
+   7          void ESP8266_SendCmd(uchar *pbuf)
+   8          {
+   9   1          while(*pbuf!='\0') //遇到空格跳出循环
+  10   1          {
+  11   2              UART_SendData(*pbuf);
+  12   2              delay_us(50);
+  13   2              pbuf++;
+  14   2          }
+  15   1          delay_us(10);
+  16   1          UART_SendData('\r');//回车
+  17   1          delay_us(10);
+  18   1          UART_SendData('\n');//换行
+  19   1          delay_us(10);
+  20   1      }
+  21          
+  22          //ESP8266 WIFI发送数据到APP
+  23          //pbuf：数据
+  24          void ESP8266_SendData(uchar *pbuf)
+  25          {
+  26   1          while(*pbuf!='\0') //遇到空格跳出循环
+  27   1          {
+  28   2              UART_SendData(*pbuf);
+  29   2              delay_us(10);
+  30   2              pbuf++;
+  31   2          }
+  32   1      
+  33   1      }
+  34          
+  35          //ESP8266-WIFI模块工作模式初始化
+  36          void ESP8266_ModeInit(void)
+  37          {
+  38   1      //    ESP8266_SendCmd("AT+CWMODE=1");//设置路由器模式 1 staTIon模式 2 AP点 路由器模式 3 station+AP混合模式
+  39   1      //    delay_ms(1000);
+  40   1      //    ESP8266_SendCmd("AT+CWJAP=\"ji\",\"qqaazz112233\"");
+  41   1      //      delay_ms(1000);
+  42   1      //    ESP8266_SendCmd("AT+CIPSTART=\"TCP\",\"183.230.40.33\",80");
+  43   1      //      delay_ms(1000);
+  44   1      //    ESP8266_SendCmd("AT+CIPMODE=1");
+  45   1      //      delay_ms(1000);
+  46   1      //    ESP8266_SendCmd("AT+CIPSEND");
+  47   1      //      delay_ms(1000);
+  48   1      }
+  49          
+  50          //WIFI控制初始化
+  51          void wifi_control_init(void)
+  52          {
+  53   1          UART_Init();
+  54   1          ESP8266_ModeInit();
+  55   1      //  ES=1;//允许串口中断
+C51 COMPILER V9.59.0.0   WIFI_CONTROL                                                      03/03/2023 11:17:13 PAGE 2   
+
+  56   1      }
+  57          
+  58          
+  59          
+  60          
+  61          
+  62          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    111    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
